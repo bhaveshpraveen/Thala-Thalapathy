@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            /* background-color: #2196F3; */
+            /* padding: 10px; */
+            height: 100%;
+        }
+
+        .grid-item-thala {
+            background-color: #2196F3;
+            border-right: 1px solid rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        .grid-item-thalapathy {
+            background-color: rgba(0, 255, 255, 0.8);
+            border-left: 1px solid rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: "Lucida Console", Monaco, monospace;
+        }
+
+        img {
+            border-radius: 50%;
+            border: 1px solid;
+            height: 300px;
+            width: 300px;
+            transition: height .2s, width .2s;
+        }
+
+        img:hover {
+            height: 400px;
+            width: 400px;
+            /* transform: scale(1.5); */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-container">
+        <div class="grid-item-thala">
+            <h1>Thala Ajith</h1>
+            <button onclick="sendMessageThala()"><img src="https://m.behindwoods.com/tamil-movies-cinema-news-16/images/fans-want-actor-ajith-to-enter-into-politics-photos-pictures-stills-1.jpg"
+                alt="Thala Ajith"></button>
+            <div>
+                <p id="votes-thala">{{ thala }}</p>
+            </div>
+        </div>
+        <div class="grid-item-thalapathy">
+            <h1>Thalapathy Vijay</h1>
+            <button onclick="sendMessageThalapathy()"><img src="https://m.behindwoods.com/tamil-movies-cinema-news-16/images/vijay-61-team-to-leave-for-europe-on-28th-april-2017-photos-pictures-stills.jpg"
+                height="300px" width="300px" alt="Thalapathy Vijay"></button>
+            <div>
+                <p id="votes-thalapathy">{{ thalapathy }}</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var socket = new WebSocket('ws://' + window.location.host );
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+{#      socket.send("hello world");#}
+    };
+
+
+    function sendMessageThala(){
+        socket.send("thala");
+        console.log('Sent Thala');
+    }
+    function sendMessageThalapathy(){
+        socket.send("thalapathy");
+        console.log('Sent Thalapathy');
+    }
+
+
+    socket.onmessage = function message(event) {
+{#        alert(event.data);#}
+        console.log(event);
+        var obj = (JSON.parse(event.data));
+        document.getElementById('votes-thala').innerHTML = obj.thala;
+        document.getElementById('votes-thalapathy').innerHTML = obj.thalapathy;
+{#      var data = JSON.parse(event.data);#}
+{#      // NOTE: We escape JavaScript to prevent XSS attacks.#}
+{#      var username = encodeURI(data['username']);#}
+{#      var user = $('li').filter(function () {#}
+{#        return $(this).data('username') == username;#}
+{#      });#}
+{##}
+{#      if (data['is_logged_in']) {#}
+{#        user.html(username + ': Online');#}
+{#      }#}
+{#      else {#}
+{#        user.html(username + ': Offline');#}
+{#      }#}
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+  </script>
+</html>
